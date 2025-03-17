@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+</head>
+<body>
+  <h2>Log ind</h2>
+  <form onsubmit="logIn(event)">
+    <input type="text" id="username" placeholder="Brugernavn" required>
+    <input type="password" id="password" placeholder="Adgangskode" required>
+    <button type="submit">Log ind</button>
+  </form>
+  <p>Har du ingen konto? <a href="signin.html">Opret en</a></p>
+
+  <script>
+    function logIn(event) {
+      event.preventDefault();
+      Parse.User.logIn(
+        document.getElementById("username").value,
+        document.getElementById("password").value
+      ).then(user => {
+        alert("Velkommen, " + user.get("username") + "!");
+        window.location.href = "desktop.html";
+      }).catch(error => alert("Fejl: " + error.message));
+    }
+  </script>
+</body>
+</html>
