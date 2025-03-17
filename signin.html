@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Opret Konto</title>
+</head>
+<body>
+  <h2>Opret en konto</h2>
+  <form onsubmit="signUp(event)">
+    <input type="text" id="username" placeholder="Brugernavn" required>
+    <input type="password" id="password" placeholder="Adgangskode" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <button type="submit">Opret</button>
+  </form>
+  <p>Har du allerede en konto? <a href="login.html">Log ind</a></p>
+
+  <script>
+    function signUp(event) {
+      event.preventDefault();
+      let user = new Parse.User();
+      user.set("username", document.getElementById("username").value);
+      user.set("password", document.getElementById("password").value);
+      user.set("email", document.getElementById("email").value);
+
+      user.signUp().then(() => {
+        alert("Konto oprettet! Log ind nu.");
+        window.location.href = "login.html";
+      }).catch(error => alert("Fejl: " + error.message));
+    }
+  </script>
+</body>
+</html>
