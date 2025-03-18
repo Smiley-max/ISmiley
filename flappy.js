@@ -1,92 +1,108 @@
-const canvas = document.createElement('canvas');
-document.body.appendChild(canvas);
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
-// Spilvariabler
-let bird = { x: 50, y: canvas.height / 2, width: 20, height: 20, gravity: 0.6, lift: -15, velocity: 0 };
-let pipes = [];
-let pipeWidth = 50;
-let pipeGap = 200;
-let gameOver = false;
+// Smiley-karakter
+const smiley = {
+  x: 50,
+  y: 250,
+  radius: 15,
+  gravity: 0.5,
+  lift: -10,
+  velocity: 0
+};
+
+// Rør
+const pipes = [];
+const pipeWidth = 50;
+const pipeGap = 120;
+const pipeSpeed = 2;
+let frame = 0;
 let score = 0;
 
-// Sæt canvas størrelse
-canvas.width = 400;
-canvas.height = 600;
-
-// Start funktion
-function startGame() {
-  bird.y = canvas.height / 2;
-  bird.velocity = 0;
-  pipes = [];
-  score = 0;
-  gameOver = false;
-  spawnPipe();
-  requestAnimationFrame(updateGame);
-}
+// Hop når man trykker på mellemrum
+document.addEventListener("keydown", function(event) {
+  if (event.code === "Space") {
+    smiley.velocity = smiley.lift;
+  }
+});
 
 // Opdater spillet
-function updateGame() {
-  if (gameOver) {
-    alert("Game Over! Score: " + score);
-    return;
+function update() {
+  smiley.velocity += smiley.gravity;
+  smiley.y += smiley.velocity;
+
+  // Rammer jorden eller toppen
+  if (smiley.y + smiley.radius >= canvas.height || smiley.y - smiley.radius <= 0) {
+    resetGame();
   }
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  // Tegn fuglen
-  bird.velocity += bird.gravity;
-  bird.y += bird.velocity;
-  ctx.fillStyle = "yellow";
-  ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
+  // Generér nye rør
+  if (frame % 100 === 0) {
+    let pipeY = Math.random() * (canvas.height - pipeGap - 50) + 25;
+    pipes.push({ x: canvas.width, y: pipeY });
+  }
 
-  // Tegn rør og tjek for kollision
+  // Flyt og tjek kollision med rør
   for (let i = pipes.length - 1; i >= 0; i--) {
-    let pipe = pipes[i];
-    pipe.x -= 2;
-    ctx.fillStyle = "green";
-    ctx.fillRect(pipe.x, 0, pipeWidth, pipe.topHeight);
-    ctx.fillRect(pipe.x, pipe.topHeight + pipeGap, pipeWidth, canvas.height - pipe.topHeight - pipeGap);
+    pipes[i].x -= pipeSpeed;
 
     // Kollision
     if (
-      bird.x + bird.width > pipe.x &&
-      bird.x < pipe.x + pipeWidth &&
-      (bird.y < pipe.topHeight || bird.y + bird.height > pipe.topHeight + pipeGap)
+      smiley.x + smiley.radius > pipes[i].x &&
+      smiley.x - smiley.radius < pipes[i].x + pipeWidth &&
+      (smiley.y - smiley.radius < pipes[i].y || smiley.y + smiley.radius > pipes[i].y + pipeGap)
     ) {
-      gameOver = true;
+      resetGame();
     }
 
-    if (pipe.x + pipeWidth < 0) {
+    // Fjern rør uden for skærmen
+    if (pipes[i].x + pipeWidth < 0) {
       pipes.splice(i, 1);
       score++;
     }
   }
 
-  // Spawning af nye rør
-  if (pipes[pipes.length - 1]?.x < canvas.width - 200) {
-    spawnPipe();
-  }
+  frame++;
+}
 
-  // Opdater score
+// Tegn spillet
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Tegn smiley
+  ctx.fillStyle = "yellow";
+  ctx.beginPath();
+  ctx.arc(smiley.x, smiley.y, smiley.radius, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+
+  // Tegn rør
+  ctx.fillStyle = "green";
+  pipes.forEach(pipe => {
+    ctx.fillRect(pipe.x, 0, pipeWidth, pipe.y);
+    ctx.fillRect(pipe.x, pipe.y + pipeGap, pipeWidth, canvas.height - pipe.y - pipeGap);
+  });
+
+  // Tegn score
   ctx.fillStyle = "black";
   ctx.font = "20px Arial";
   ctx.fillText("Score: " + score, 10, 30);
-
-  // Animer igen
-  requestAnimationFrame(updateGame);
 }
 
-// Spawn et nyt rør
-function spawnPipe() {
-  let topHeight = Math.floor(Math.random() * (canvas.height - pipeGap));
-  pipes.push({ x: canvas.width, topHeight: topHeight });
+// Nulstil spillet
+function resetGame() {
+  smiley.y = 250;
+  smiley.velocity = 0;
+  pipes.length = 0;
+  score = 0;
+  frame = 0;
 }
 
-// Tastetryk (op) for at få fuglen til at hoppe
-document.addEventListener('keydown', function(e) {
-  if (e.key === ' ') { // Brug mellemrumstasten
-    bird.velocity = bird.lift;
-  }
-});
+// Kør spillet
+function gameLoop() {
+  update();
+  draw();
+  requestAnimationFrame(gameLoop);
+}
 
+gameLoop();
