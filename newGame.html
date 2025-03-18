@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Smiley Game</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      background-color: #f0f8ff;
+      color: #333;
+      padding: 20px;
+    }
+
+    canvas {
+      background-color: #f0f0f0;
+      border: 2px solid #333;
+      display: block;
+      margin: 0 auto;
+    }
+
+    #saveProgressButton {
+      padding: 10px 20px;
+      font-size: 18px;
+      margin-top: 20px;
+      background-color: #00aaff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    #saveProgressButton:hover {
+      background-color: #0077b3;
+    }
+
+  </style>
+</head>
+<body>
+  <h2>New Smiley Game</h2>
+  <canvas id="gameCanvas" width="500" height="500"></canvas>
+  <button id="saveProgressButton">Gem Fremskridt</button>
+  <script src="https://npmcdn.com/parse/dist/parse.min.js"></script>
+  <script src="newGame.js"></script>
+
+  <script>
+    // Din spil-logik her, for eksempel:
+    // Når spilleren gennemfører et niveau, kan du gemme deres fremskridt
+
+    let levelCompleted = 2;  // Eksempel på et gennemført niveau
+    document.getElementById("saveProgressButton").addEventListener("click", function() {
+      saveLevelToDatabase(levelCompleted);
+    });
+  </script>
+</body>
+</html>
