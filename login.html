@@ -21,14 +21,20 @@
         document.getElementById("username").value,
         document.getElementById("password").value
       ).then(user => {
-        alert("Velkommen, " + user.get("username") + "!");
-        window.location.href = "desktop.html";
+        // Tjek om brugeren er admin
+        const isAdmin = user.get("HasAdmin");
+        if (isAdmin) {
+          // Hvis brugeren er admin, send dem til admin-dashboard
+          window.location.href = "admin-dashboard.html";
+        } else {
+          // Ellers send dem til desktop
+          window.location.href = "desktop.html";
+        }
       }).catch(error => alert("Fejl: " + error.message));
     }
   </script>
-  <script src="https://npmcdn.com/parse/dist/parse.min.js"></script>
-<script src="auth.js"></script>
-<form onsubmit="logIn(event)">
 
+  <script src="https://npmcdn.com/parse/dist/parse.min.js"></script>
+  <script src="auth.js"></script>
 </body>
 </html>
