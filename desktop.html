@@ -6,82 +6,35 @@
   <title>ISmiley Desktop</title>
   <style>
     body {
-      background: #f0f0f0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
+      background-color: #0078D7; /* Windows blå farve */
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
-    }
-    .desktop {
-      width: 80%;
-      background-color: #fff;
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-    .avatar {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      margin-bottom: 20px;
-      background: #bbb;
-      display: inline-block;
-    }
-    .welcome-message {
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-    }
-    .app-icons {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-    }
-    .icon {
-      width: 50px;
-      height: 50px;
-      background-color: #0078d4;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
+      font-family: Arial, sans-serif;
       color: white;
-      cursor: pointer;
-      font-size: 1.2rem;
     }
-    .icon:hover {
-      background-color: #005a9e;
+
+    .app-button {
+      background-color: #fdd835;
+      border: none;
+      padding: 15px 30px;
+      font-size: 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .app-button:hover {
+      background-color: #ffeb3b;
     }
   </style>
 </head>
 <body>
-  <div class="desktop">
-    <div class="avatar"></div>
-    <div class="welcome-message" id="welcomeMessage"></div>
-
-    <div class="app-icons">
-      <!-- Knap for Flappy Smiley -->
-      <div class="icon" onclick="startFlappySmiley()">🎮 Flappy Smiley</div>
-    </div>
-  </div>
-
-  <script>
-    // Hent den loggede bruger fra Parse
-    const user = Parse.User.current();
-    if (user) {
-      document.getElementById("welcomeMessage").innerText = `Velkommen, ${user.get("username")}!`;
-    } else {
-      window.location.href = "login.html";
-    }
-
-    // Start Flappy Smiley
-    function startFlappySmiley() {
-      window.location.href = "flappy.html"; // Start spillet på en ny side
-    }
-  </script>
+  <h1>Velkommen til ISmiley Desktop</h1>
+  <button class="app-button" onclick="window.location.href='flappy.html'">Start Flappy Smiley</button>
 </body>
 </html>
