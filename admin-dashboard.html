@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    h2 {
+      color: #333;
+    }
+    .button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+    .button:hover {
+      background-color: #0056b3;
+    }
+    .admin-section {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <h2>Velkommen til Admin Dashboard</h2>
+
+  <div class="admin-section">
+    <h3>Admin Funktionen</h3>
+    <p>Som admin kan du tilgå specielle funktioner her:</p>
+    <button class="button" onclick="viewUsers()">Se alle brugere</button>
+    <button class="button" onclick="manageSettings()">Administrer indstillinger</button>
+    <button class="button" onclick="logOut()">Log ud</button>
+    <button class="button" onclick="goToDesktop()">Gå til Desktop</button> <!-- Ny knap -->
+  </div>
+
+  <script>
+    // Tjek om brugeren er admin, ellers send dem tilbage til login-siden
+    function checkAdminAccess() {
+      const user = Parse.User.current();
+      if (!user || !user.get('HasAdmin')) {
+        window.location.href = "login.html"; // Send brugeren til login-siden hvis de ikke er admin
+      }
+    }
+
+    // Funktion til at logge brugeren ud
+    function logOut() {
+      Parse.User.logOut().then(() => {
+        alert('Du er blevet logget ud!');
+        window.location.href = "login.html"; // Send brugeren tilbage til login-siden
+      }).catch((error) => {
+        alert('Fejl ved logout: ' + error.message);
+      });
+    }
+
+    // Funktion til at vise alle brugere
+    function viewUsers() {
+      const User = Parse.Object.extend('User');
+      const query = new Parse.Query(User);
+      query.find().then((users) => {
+        alert('Fundet ' + users.length + ' brugere.');
+        console.log(users);
+      }).catch((error) => {
+        alert('Fejl ved hentning af brugere: ' + error.message);
+      });
+    }
+
+    // Funktion til at administrere indstillinger
+    function manageSettings() {
+      alert('Her kan du administrere indstillinger.');
+    }
+
+    // Funktion til at gå til desktop
+    function goToDesktop() {
+      window.location.href = "desktop.html"; // Sender brugeren til desktop-siden
+    }
+
+    // Kalder checkAdminAccess, når siden indlæses
+    window.onload = checkAdminAccess;
+  </script>
+
+  <script src="https://npmcdn.com/parse/dist/parse.min.js"></script>
+</body>
+</html>
